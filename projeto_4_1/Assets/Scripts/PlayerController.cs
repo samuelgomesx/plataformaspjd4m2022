@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
         _playerinput = GetComponent<PlayerInput>();
         
         _mainCamera = Camera.main;
-
+        
         _playerinput.onActionTriggered += OnActionTriggered;
         
     }
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnActionTriggered(InputAction.CallbackContext obj)
     {
-        if (obj.action.name.CompareTo(_controls.Gameplay.Move.name) != 0)
+        if (obj.action.name.CompareTo(_controls.Gameplay.Move.name) == 0)
         {
             _moveInput = obj.ReadValue<Vector2>();
 
