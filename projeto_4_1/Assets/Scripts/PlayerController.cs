@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public int coins = 0;
     private Controls _controls;
     private PlayerInput _playerinput;
     private Camera _mainCamera;
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
         
         _rigidbody.AddForce(
             (camForward * _moveInput.y +
-                 camRight* _moveInput.y  * _moveInput.x)
+                 camRight* _moveInput.x  )
             * moveMultiplier * Time.deltaTime);
     }
 
@@ -114,5 +115,15 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Debug.DrawRay(start:transform.position, dir:Vector3.down * rayDistance, Color.yellow);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Coin"))
+        {
+            coins++;
+            Destroy(other.gameObject);
+        }
+    
     }
 }   
