@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
     public int coins = 0;
+    public TMP_Text coinText;
     private Controls _controls;
     private PlayerInput _playerinput;
     private Camera _mainCamera;
@@ -122,6 +124,7 @@ public class PlayerController : MonoBehaviour
         if(other.CompareTag("Coin"))
         {
             coins++;
+            coinText.text = coins.ToString();
             Destroy(other.gameObject);
         }
     
