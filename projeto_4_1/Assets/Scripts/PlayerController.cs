@@ -8,7 +8,6 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     public int coins = 0;
-    public TMP_Text coinText;
     private Controls _controls;
     private PlayerInput _playerinput;
     private Camera _mainCamera;
@@ -124,9 +123,12 @@ public class PlayerController : MonoBehaviour
         if(other.CompareTag("Coin"))
         {
             coins++;
-            coinText.text = coins.ToString();
+            // manda a notificação da mudança do valor de coins
+            PlayerObserveManager.CoinsChanged(coins);
+            
+            // Destrua o objeto da coin
             Destroy(other.gameObject);
         }
     
     }
-}   
+} //NÃO ESCREVA DEPOIS DESSA ULTIMA LINHA   
