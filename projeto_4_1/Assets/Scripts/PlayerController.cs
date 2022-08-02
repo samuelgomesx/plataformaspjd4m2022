@@ -8,6 +8,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     public int coins = 0;
+    public int Coras = 0;
     private Controls _controls;
     private PlayerInput _playerinput;
     private Camera _mainCamera;
@@ -129,6 +130,14 @@ public class PlayerController : MonoBehaviour
             // Destrua o objeto da coin
             Destroy(other.gameObject);
         }
-    
+
+        if (other.CompareTag("CoRa"))
+        {
+            Coras++;
+            PlayerObserveManager.CorasChanged(Coras);
+            Destroy(other.gameObject);
+
+        }
     }
+    
 } //NÃO ESCREVA DEPOIS DESSA ULTIMA LINHA   
