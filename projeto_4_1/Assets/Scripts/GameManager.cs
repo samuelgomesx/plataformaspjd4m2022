@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         Instantiate(playerAndCameraPrefab, playerStartPosition, Quaternion.identity);
     }
 
-    private void StartGameFromInitialization()
+    public void StartGame()
     {
         // impede que o objeto GameManager entre parenteses seja destruido
         DontDestroyOnLoad(this.gameObject); // referencia pro objeto que contem o GameManager
@@ -103,5 +103,13 @@ public class GameManager : MonoBehaviour
         // 3 - começar a partida
     }
 
+    private void StartGameFromInitialization()
+    {
+        SceneManager.LoadScene("Splash");
+    }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
