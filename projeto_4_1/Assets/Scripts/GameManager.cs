@@ -2,7 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+
+public enum GameState
+{
+    Initialization,
+    Running,
+    Victory,
+    GameOver
+}
 
 /// <summary>
 /// Classe usada para gerenciar o jogo
@@ -11,7 +20,21 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance; // instancia do singleton
-    
+
+    public GameState GameState
+    {
+        get => _gameState;
+        set
+        {
+            if (value != _gameState) return;
+            OnGameStateChanged();
+            _gameState = value;
+            
+        }
+    }
+
+    public int CoinsTowin;
+    public float TimeToLose;
     
     [SerializeField] 
     private string guiName; // nome da fase de interface;
@@ -21,6 +44,21 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] 
     private GameObject playerAndCameraPrefab; // referencia pro prefab do jogador + camera
+
+    private GameState _gameState; // variavel que guarda o estado atual do game manager
+    private float _currentTime;
+    private void OnEnable()
+    {
+        PlayerObserveManager.OnCoinsChanged += PlayerCoinsUpdate;
+    }
+
+   
+
+    private void OnDisable()
+    {
+        PlayerObserveManager.OnCoinsChanged -= PlayerCoinsUpdate;
+    }
+
 
     private void Awake()
     {
@@ -43,7 +81,7 @@ public class GameManager : MonoBehaviour
         else // caso contrario, esta iniciando a partir do level, carregue o jogo do modo apropriado 
             StartGameFromLevel();
         
-   
+    
 
     }
 
@@ -57,6 +95,8 @@ public class GameManager : MonoBehaviour
            
         // instancia o prefab do jogador na posiçao do player start com rotação zerada
         Instantiate(playerAndCameraPrefab, playerStartPosition, Quaternion.identity);
+        
+        GameState = GameState.Running;
     }
 
     public void StartGame()
@@ -93,7 +133,8 @@ public class GameManager : MonoBehaviour
            
             // instancia o prefab do jogador na posiçao do player start com rotação zerada
             Instantiate(playerAndCameraPrefab, playerStartPosition, Quaternion.identity);
-
+            // 3 - começar a partida
+            GameState = GameState.Running;
         } ; 
         
         
@@ -101,10 +142,12 @@ public class GameManager : MonoBehaviour
        
 
         // 3 - começar a partida
+      
     }
 
     private void StartGameFromInitialization()
     {
+        GameState = GameState.Initialization;
         SceneManager.LoadScene("Splash");
     }
 
@@ -112,4 +155,27 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+    }
+    private void PlayerCoinsUpdate(int obj)
+    {
+        if (obj >=CoinsTowin)GameState= GameState.Victory;
+    }
+
+    private void OnGameStateChanged()
+    {
+        
+    }
+
+
 }
+
+
