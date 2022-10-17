@@ -9,7 +9,7 @@ public class MainMenuController : MonoBehaviour
    
     private void Update()
     {
-        if (Keyboard.current.anyKey.isPressed)
+        if (Keyboard.current.anyKey.wasPressedThisFrame)
         {
             GameManager.Instance.StartGame();
         }

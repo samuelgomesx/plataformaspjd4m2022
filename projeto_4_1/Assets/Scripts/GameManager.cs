@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public enum GameState
@@ -26,10 +27,9 @@ public class GameManager : MonoBehaviour
         get => _gameState;
         set
         {
-            if (value != _gameState) return;
-            OnGameStateChanged();
+            if (value == _gameState) return;
             _gameState = value;
-            
+            OnGameStateChanged();
         }
     }
 
@@ -167,13 +167,81 @@ public class GameManager : MonoBehaviour
     }
     private void PlayerCoinsUpdate(int obj)
     {
-        if (obj >=CoinsTowin)GameState= GameState.Victory;
+        if (obj >=CoinsTowin) GameState= GameState.Victory;
     }
 
     private void OnGameStateChanged()
     {
-        
+        switch (_gameState)
+        {
+            case GameState.Running:
+                ResetTime();
+                ResumeGame();
+                break;
+            case GameState.Victory:
+                PauseGame();
+                LoasVictoryScene();
+                break;
+            case GameState.GameOver:
+                PauseGame();
+                LoadGameOverScene();
+                break;
+            
+                
+        }
     }
+
+    private void LoasVictoryScene()
+    {
+        SceneManager.LoadScene("Victory", LoadSceneMode.Additive);
+    }
+
+    private void ResetTime()
+    {
+        _currentTime = TimeToLose;
+    }
+
+    private void Update()
+    {
+        if (GameState == GameState.Running)
+        {
+            _currentTime -= Time.deltaTime;
+            if (_currentTime <= 0)
+            {
+                GameState = GameState.GameOver;
+            }
+        }
+
+        if (GameState == GameState.Victory)
+        {
+            if (Keyboard.current.anyKey.wasPressedThisFrame)
+            {
+               StartGame(); 
+            }
+        }
+        
+        if (GameState == GameState.GameOver)
+        {
+            if (Keyboard.current.anyKey.wasPressedThisFrame)
+            {
+                GameState = GameState.Initialization;
+                ResumeGame();
+                LoadMainMenu();
+            }
+        }
+    }
+
+    
+    private void LoadGameOverScene()
+    {
+        SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
+    }
+
+
+
+
+
+
 
 
 }
